@@ -10,6 +10,7 @@ class Database extends PDO
 {
     private array $tables;
     private string $database_name;
+    protected string $table;
 
     public function __construct(string $ini_path)
     {
@@ -56,5 +57,40 @@ class Database extends PDO
             $field_name = "Tables_in_{$this->database_name}";
             $this->exec("DROP TABLE IF EXISTS {$table->$field_name}");
         }
+    }
+
+    public function find(string $id): bool|\stdClass
+    {
+        $sql = <<<SQL
+                SELECT * FROM $this->table 
+                         WHERE id = :id  
+                SQL;
+        $statement =
+            $this->prepare($sql);
+        $statement->execute(['id' => $id]);
+        return $statement->fetch();
+    }
+
+    public function findOrFail(string $id): ?\stdClass
+    {
+        $jiri = $this->find($id);
+
+        if (!$jiri) {
+            Response::abort();
+        }
+
+        return $jiri;
+    }
+
+    public function delete(string $id): bool
+    {
+        $sql = <<<SQL
+                DELETE FROM $this->table 
+                         WHERE id = :id  
+                SQL;
+        $statement =
+            $this->prepare($sql);
+
+        return $statement->execute(['id' => $id]);
     }
 }
