@@ -21,3 +21,19 @@ foreach ($jiris as $jiri) {
 }
 $count_jiris = count($jiris);
 echo "Jiri table seeded with {$count_jiris} jiris".PHP_EOL;
+
+echo 'Seeding User table'.PHP_EOL;
+
+$password = password_hash('ch4nge_th1s', PASSWORD_DEFAULT);
+$users = [
+    ['email' => 'dominique.vilain@hepl.be', 'password' => $password],
+];
+$insert_user_in_users_table_sql = 'INSERT INTO users (email, password) VALUES (:email, :password)';
+$insert_user_in_users_table_stmt = $db->prepare($insert_user_in_users_table_sql);
+foreach ($users as $user) {
+    $insert_user_in_users_table_stmt->bindValue('email', $user['email']);
+    $insert_user_in_users_table_stmt->bindValue('password', $user['password']);
+    $insert_user_in_users_table_stmt->execute();
+}
+$count_users = count($users);
+echo "User table seeded with {$count_users} users".PHP_EOL;

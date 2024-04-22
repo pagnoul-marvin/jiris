@@ -8,9 +8,11 @@ use PDOException;
 
 class Database extends PDO
 {
-    private array $tables;
-    private string $database_name;
     protected string $table;
+
+    private array $tables;
+
+    private string $database_name;
 
     public function __construct(string $ini_path)
     {
@@ -45,7 +47,7 @@ class Database extends PDO
             parent::__construct($dsn, $username, $password, $options);
         } catch (PDOException $exception) {
             // TODO Rediriger vers une page d'erreur générique qui invite à contacter l'admin
-            die('Un problème de connection avec la base de données est apparu, contactez l’administrateur');
+            exit('Un problème de connection avec la base de données est apparu, contactez l’administrateur');
         }
 
         $this->tables = $this->query('SHOW TABLES')->fetchAll();
@@ -59,27 +61,27 @@ class Database extends PDO
         }
     }
 
+    public function findOrFail(string $id): ?\stdClass
+    {
+        $jiri = $this->find($id);
+
+        if (! $jiri) {
+            Response::abort();
+        }
+
+        return $jiri;
+    }
+
     public function find(string $id): bool|\stdClass
     {
         $sql = <<<SQL
                 SELECT * FROM $this->table 
                          WHERE id = :id  
-                SQL;
-        $statement =
-            $this->prepare($sql);
+        SQL;
+        $statement = $this->prepare($sql);
         $statement->execute(['id' => $id]);
+
         return $statement->fetch();
-    }
-
-    public function findOrFail(string $id): ?\stdClass
-    {
-        $jiri = $this->find($id);
-
-        if (!$jiri) {
-            Response::abort();
-        }
-
-        return $jiri;
     }
 
     public function delete(string $id): bool
@@ -87,10 +89,50 @@ class Database extends PDO
         $sql = <<<SQL
                 DELETE FROM $this->table 
                          WHERE id = :id  
-                SQL;
-        $statement =
-            $this->prepare($sql);
+        SQL;
 
-        return $statement->execute(['id' => $id]);
+        return $this->prepare($sql)->execute(['id' => $id]);
+    }
+
+    public function update(string $id, array $data): bool
+    {
+        $updateString = implode(', ', array_map(static function ($key) {
+            return "`$key` = :$key";
+        }, array_keys($data)));
+
+        $sql = <<<SQL
+            UPDATE $this->table 
+            SET $updateString
+                WHERE id = :id
+        SQL;
+        $statement = $this->prepare($sql);
+        $statement->bindValue('id', $id);
+
+        foreach ($data as $k => $v) {
+            $statement->bindValue($k, $v);
+        }
+
+        return $statement->execute();
+    }
+
+    public function create(array $data): bool
+    {
+        $columns = implode(',', array_keys($data));
+        $placeholders = implode(', ', array_map(static function ($key) {
+            return ":$key";
+        }, array_keys($data)));
+
+        $sql = <<<SQL
+            INSERT INTO $this->table ($columns)
+            VALUES ($placeholders)
+        SQL;
+
+        $statement = $this->prepare($sql);
+
+        foreach ($data as $k => $v) {
+            $statement->bindValue($k, $v);
+        }
+
+        return $statement->execute();
     }
 }

@@ -1,22 +1,25 @@
 {
-    "name": "marvinpagnoul/jiris",
+    "name": "dominique/jiri",
     "description": "An app to rule all the jiris",
     "require": {
         "php": "^8.2",
         "ext-pdo": "*",
-        "ext-ctype": "*"
+        "ext-ctype": "*",
+        "nesbot/carbon": "^3.1"
     },
     "autoload": {
         "psr-4": {
             "Core\\": "core/",
-            "App\\Http\\Controllers\\": "app/http/controllers",
-            "App\\Models\\": "app/models/"
+            "App\\": "app/"
         }
     },
     "authors": [
         {
-            "name": "pagnoul-marvin",
+            "name": "Pagnoul Marvin",
             "email": "marvin.pagnoul@student.hepl.be"
         }
-    ]
+    ],
+    "require-dev": {
+        "laravel/pint": "^1.15"
+    }
 }
