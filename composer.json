@@ -1,25 +1,25 @@
 {
-    "name": "dominique/jiri",
-    "description": "An app to rule all the jiris",
-    "require": {
-        "php": "^8.2",
-        "ext-pdo": "*",
-        "ext-ctype": "*",
-        "nesbot/carbon": "^3.1"
-    },
-    "autoload": {
-        "psr-4": {
-            "Core\\": "core/",
-            "App\\": "app/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Pagnoul Marvin",
-            "email": "marvin.pagnoul@student.hepl.be"
-        }
-    ],
-    "require-dev": {
-        "laravel/pint": "^1.15"
+  "name": "marvin/jiri",
+  "description": "An app to rule all the jiris",
+  "require": {
+    "php": "^8.2",
+    "ext-pdo": "*",
+    "ext-ctype": "*",
+    "nesbot/carbon": "^3.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Core\\": "core/",
+      "App\\": "app/"
     }
+  },
+  "authors": [
+    {
+      "name": "Marvin Pagnoul",
+      "email": "marvin.pagnoul@student.hepl.be"
+    }
+  ],
+  "require-dev": {
+    "laravel/pint": "^1.15"
+  }
 }

@@ -1,0 +1,25 @@
+{
+  "name": "jiri",
+  "version": "1.0.0",
+  "description": "Ce repo contient le code de référence qui servira durant le cours. Le cours sera construit autour de la réalisation d'une application destinée à vous familiariser avec les principes essentiels qui guident le bon développeur backend.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tecg-dcs-2023-2024/screencast.git"
+  },
+  "keywords": [
+    "php"
+  ],
+  "author": "Dominique Vilain",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tecg-dcs-2023-2024/screencast/issues"
+  },
+  "homepage": "https://github.com/tecg-dcs-2023-2024/screencast#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
+}

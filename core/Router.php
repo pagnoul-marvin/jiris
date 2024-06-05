@@ -61,7 +61,7 @@ class Router
             array_values(
                 array_filter(
                     $this->routes,
-                    fn ($v, $k) => $v['path'] === $request_uri
+                    fn($v, $k) => $v['path'] === $request_uri
                         && strtoupper($v['request_method']) === strtoupper($request_method),
                     ARRAY_FILTER_USE_BOTH
                 )

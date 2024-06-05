@@ -8,7 +8,7 @@ class Auth implements \Core\Contracts\Middleware
 {
     public function handle(): void
     {
-        if (! \Core\Auth::check()) {
+        if (!\Core\Auth::check()) {
             Response::redirect('/login');
         }
     }

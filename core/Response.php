@@ -14,6 +14,8 @@ class Response
 
     public const SERVER_ERROR = 500;
 
+    public const UNAUTHORIZED = 401;
+
     #[NoReturn]
     public static function abort(int $code = self::NOT_FOUND): void
     {

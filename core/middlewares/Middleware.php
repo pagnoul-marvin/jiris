@@ -14,7 +14,7 @@ class Middleware
 
     public static function resolve(string $name): void
     {
-        if (! array_key_exists($name, self::MAP)) {
+        if (!array_key_exists($name, self::MAP)) {
             throw new MiddlewareNotFoundException($name);
         }
 

@@ -12,7 +12,7 @@ session_start();
 $router = new Router();
 require base_path('routes/web.php');
 
-if (isset($_REQUEST['_method']) && ! in_array(strtoupper($_REQUEST['_method']), ['PUT', 'PATCH', 'DELETE'])) {
+if (isset($_REQUEST['_method']) && !in_array(strtoupper($_REQUEST['_method']), ['PUT', 'PATCH', 'DELETE'])) {
     Response::abort(Response::BAD_REQUEST);
 }
 

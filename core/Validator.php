@@ -13,7 +13,7 @@ class Validator
 
         $request_data = array_filter(
             $_POST,
-            fn (string $k) => $k !== '_method' && $k !== '_csrf',
+            fn(string $k) => $k !== '_method' && $k !== '_csrf',
             ARRAY_FILTER_USE_KEY
         );
 
@@ -51,7 +51,7 @@ class Validator
                 } else {
                     $method = $rule;
                 }
-                if (! method_exists(self::class, $method)) {
+                if (!method_exists(self::class, $method)) {
                     throw new RuleNotFoundException($rule);
                 }
                 self::$method($key, $param, $subparam);
@@ -61,7 +61,7 @@ class Validator
 
     private static function email(string $key): bool
     {
-        if (! filter_var($_REQUEST[$key], FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($_REQUEST[$key], FILTER_VALIDATE_EMAIL)) {
             $_SESSION['errors'][$key] = 'La valeur fournie n’est pas une adresse email valide';
 
             return false;
@@ -72,7 +72,7 @@ class Validator
 
     private static function datetime(string $key): bool
     {
-        if (! date_create_from_format('Y-m-d H:i', $_REQUEST[$key])) {
+        if (!date_create_from_format('Y-m-d H:i', $_REQUEST[$key])) {
             $_SESSION['errors'][$key] = 'La date doit est une date au format AAAA-MM-JJ HH:MM';
 
             return false;
@@ -94,7 +94,7 @@ class Validator
 
     private static function password(string $key): bool
     {
-        if (! self::min($key, 8) || ! self::numbers($key) || ! self::special_chars($key)) {
+        if (!self::min($key, 8) || !self::numbers($key) || !self::special_chars($key)) {
             $_SESSION['errors'][$key] = "{$key} ne respecte pas le format demandé";
 
             return false;
@@ -116,7 +116,7 @@ class Validator
 
     private static function numbers(string $key): bool
     {
-        if (! preg_match('/\d+/', $_REQUEST[$key])) {
+        if (!preg_match('/\d+/', $_REQUEST[$key])) {
             $_SESSION['errors'][$key] = "{$key} doit contenir au moins un chiffre";
 
             return false;
@@ -127,7 +127,7 @@ class Validator
 
     private static function special_chars(string $key): bool
     {
-        if (! preg_match('/[+\-*\/!?_]+/', $_REQUEST[$key])) {
+        if (!preg_match('/[+\-*\/!?_]+/', $_REQUEST[$key])) {
             $_SESSION['errors'][$key] = "{$key} doit contenir au moins un caractère spécial";
 
             return false;
@@ -159,11 +159,11 @@ class Validator
             $method = "findBy{$column}";
         }
 
-        if (! method_exists($model, $method)) {
+        if (!method_exists($model, $method)) {
             return false;
         }
 
-        if (! $model->$method($_REQUEST[$key])) {
+        if (!$model->$method($_REQUEST[$key])) {
             $_SESSION['errors'][$key] = "{$key} n'existe pas dans notre base de données";
 
             return false;
@@ -184,11 +184,11 @@ class Validator
             $method = "findBy{$column}";
         }
 
-        if (! method_exists($model, $method)) {
+        if (!method_exists($model, $method)) {
             return false;
         }
 
-        if (! ($model->$method($_REQUEST[$key]))) {
+        if (!($model->$method($_REQUEST[$key]))) {
             return true;
         }
 

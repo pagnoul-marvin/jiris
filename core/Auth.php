@@ -27,4 +27,9 @@ class Auth
     {
         return isset($_SESSION['user']);
     }
+
+    public static function id()
+    {
+        return $_SESSION['user']->id;
+    }
 }
