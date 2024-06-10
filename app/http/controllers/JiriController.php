@@ -7,6 +7,7 @@ use App\Models\Contact;
 use App\Models\Jiri;
 use Core\Auth;
 use Core\Concerns\Request\HasIdentifier;
+use Core\Database;
 use Core\Exceptions\FileNotFoundException;
 use Core\Response;
 use Core\Validator;
@@ -19,14 +20,16 @@ class JiriController
     private Contact $contact;
     private Attendance $attendance;
 
+    private ?Database $db;
+
     use HasIdentifier;
 
     public function __construct()
     {
         try {
-            $this->jiri = new Jiri(base_path('.env.local.ini'));
-            $this->contact = new Contact(base_path('.env.local.ini'));
-            $this->attendance = new Attendance(base_path('.env.local.ini'));
+            $this->jiri = new Jiri();
+            $this->contact = new Contact();
+            $this->attendance = new Attendance();
         } catch (FileNotFoundException $exception) {
             exit($exception->getMessage());
         }
@@ -104,7 +107,6 @@ class JiriController
             Response::abort(Response::UNAUTHORIZED);
         }
     }
-
     public function edit(): void
     {
         $id = $this->checkValidId();
@@ -139,6 +141,8 @@ class JiriController
         $id = $this->checkValidId();
 
         $this->check_ownership($id);
+
+        $this->attendance->deleteFormOthersTables($id, 'jiri');
 
         $this->jiri->delete($id);
 

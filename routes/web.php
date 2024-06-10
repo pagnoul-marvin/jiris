@@ -9,3 +9,4 @@ require __DIR__.'/jiri.php';
 require __DIR__.'/attendance.php';
 require __DIR__.'/contact.php';
 require __DIR__.'/auth.php';
+require __DIR__.'/project.php';

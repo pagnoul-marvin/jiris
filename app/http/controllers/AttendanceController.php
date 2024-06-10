@@ -15,7 +15,7 @@ class AttendanceController
     public function __construct()
     {
         try {
-            $this->attendance = new Attendance(base_path('.env.local.ini'));
+            $this->attendance = new Attendance();
         } catch (FileNotFoundException $exception) {
             exit($exception->getMessage());
         }

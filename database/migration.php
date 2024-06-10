@@ -2,21 +2,22 @@
 
 // Get a connection to Db
 use Core\Exceptions\FileNotFoundException;
+use Core\Database;
 
 try {
-    $db = new Core\Database(BASE_PATH.'/.env.local.ini');
+    $db = new Database(BASE_PATH . '/.env.local.ini');
 } catch (FileNotFoundException $exception) {
     exit($exception->getMessage());
 }
 
 // Drop tables
-echo 'Dropping all Tables'.PHP_EOL;
+echo 'Dropping all Tables' . PHP_EOL;
 $db->dropTables();
-echo 'All tables have been dropped'.PHP_EOL;
+echo 'All tables have been dropped' . PHP_EOL;
 
 // Create tables
 
-echo 'Creating User table'.PHP_EOL;
+echo 'Creating User table' . PHP_EOL;
 $create_table_sql = <<<SQL
     create table users
     (
@@ -30,11 +31,11 @@ $create_table_sql = <<<SQL
 SQL;
 
 $db->exec($create_table_sql);
-echo 'User table created'.PHP_EOL;
+echo 'User table created' . PHP_EOL;
 
 /**/
 
-echo 'Creating Jiri table'.PHP_EOL;
+echo 'Creating Jiri table' . PHP_EOL;
 $create_table_sql = <<<SQL
     create table jiris
     (
@@ -49,11 +50,31 @@ $create_table_sql = <<<SQL
 SQL;
 
 $db->exec($create_table_sql);
-echo 'Jiri table created'.PHP_EOL;
+echo 'Jiri table created' . PHP_EOL;
 
 /**/
 
-echo 'Creating Contact table'.PHP_EOL;
+echo 'Creating Project table' . PHP_EOL;
+$create_table_sql = <<<SQL
+    create table projects(
+        id          int unsigned auto_increment primary key,
+        name        varchar(255) not null,
+        description  longtext not null,
+        user_id     int unsigned not null,
+        starting_at  timestamp default CURRENT_TIMESTAMP not null,
+        ending_at  timestamp default CURRENT_TIMESTAMP not null,
+        created_at  timestamp default CURRENT_TIMESTAMP not null ,
+        updated_at  timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP,
+        foreign key(user_id) references users(id)
+    )
+SQL;
+
+$db->exec($create_table_sql);
+echo 'Project table created' . PHP_EOL;
+
+/**/
+
+echo 'Creating Contact table' . PHP_EOL;
 $create_table_sql = <<<SQL
     create table contacts
     (
@@ -68,11 +89,29 @@ $create_table_sql = <<<SQL
 SQL;
 
 $db->exec($create_table_sql);
-echo 'Contact table created'.PHP_EOL;
+echo 'Contact table created' . PHP_EOL;
 
 /**/
 
-echo 'Creating Attendance table'.PHP_EOL;
+echo 'Creating Projects_Contacts table' . PHP_EOL;
+$create_table_sql = <<<SQL
+    create table projects_contacts(
+        id          int unsigned auto_increment primary key,
+        role        varchar(255),
+        contact_id  int unsigned not null,
+        project_id  int unsigned not null,
+        created_at  timestamp default CURRENT_TIMESTAMP not null ,
+        updated_at  timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP,
+        foreign key(contact_id) references contacts(id),
+        foreign key(project_id) references projects(id)
+    )
+SQL;
+$db->exec($create_table_sql);
+echo 'Projects_Contacts table created' . PHP_EOL;
+
+/**/
+
+echo 'Creating Attendance table' . PHP_EOL;
 $create_table_sql = <<<SQL
     create table attendances
     (
@@ -88,4 +127,4 @@ $create_table_sql = <<<SQL
 SQL;
 
 $db->exec($create_table_sql);
-echo 'Attendance table created'.PHP_EOL;
+echo 'Attendance table created' . PHP_EOL;

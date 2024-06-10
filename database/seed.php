@@ -79,10 +79,53 @@ $insert_attendance_in_attendances_table_stmt = $db->prepare($insert_attendance_i
 foreach ($attendances as $attendance) {
     $insert_attendance_in_attendances_table_stmt->bindValue('contact_id', $attendance['contact_id']);
     $insert_attendance_in_attendances_table_stmt->bindValue('jiri_id', $attendance['jiri_id']);
-    $insert_attendance_in_attendances_table_stmt->bindValue('role', $attendance['role   ']);
+    $insert_attendance_in_attendances_table_stmt->bindValue('role', $attendance['role']);
     $insert_attendance_in_attendances_table_stmt->execute();
 }
 $count_attendances = count($attendances);
 echo "Contact table seeded with {$count_attendances} attendances".PHP_EOL;
 
+echo 'Seeding Projects table'.PHP_EOL;
+$projects = [
+    ['name' => 'Customer Usability Supervisor', 'description' => 'Le projet "Customer Usability Supervisor" (CUS) vise à améliorer l\'expérience utilisateur (UX) des produits et services proposés par une entreprise en surveillant et en analysant l\'utilisation par les clients. Ce projet a pour but de fournir des insights détaillés sur les interactions des utilisateurs, d\'identifier les points de friction et de proposer des améliorations pour optimiser la convivialité et la satisfaction des clients', 'user_id' => '1', 'starting_at' => '2016-01-01', 'ending_at' => '2017-05-25'],
+    ['name' => 'Regional Markets Supervisor', 'description' => 'Le projet "Regional Markets Supervisor" (RMS) a pour objectif de surveiller, analyser et optimiser les performances des marchés régionaux où une entreprise opère. Ce projet vise à fournir des insights approfondis sur les dynamiques des différents marchés régionaux, identifier les opportunités de croissance, et améliorer les stratégies de marketing et de vente pour chaque région.', 'user_id' => '1', 'starting_at' => '2018-09-04', 'ending_at' => '2018-12-31'],
+    ['name' => 'Corporate Interactions Analyst', 'description' => 'Le projet "Corporate Interactions Analyst" (CIA) vise à optimiser et analyser les interactions entre une entreprise et ses différentes parties prenantes, incluant les clients, les partenaires, les fournisseurs, et les employés. Ce projet a pour but d\'améliorer la communication, de renforcer les relations et de maximiser l\'efficacité des interactions au sein de l\'entreprise.', 'user_id' => '1', 'starting_at' => '2025-07-16', 'ending_at' => '2025-11-07'],
+    ['name' => 'Product Web Consultant', 'description' => 'Le projet "Product Web Consultant" (PWC) a pour objectif d\'améliorer la présence en ligne et l\'efficacité des sites web de produits d\'une entreprise. Ce projet vise à optimiser les performances web, l\'expérience utilisateur (UX), et les taux de conversion en analysant et en conseillant sur les meilleures pratiques en matière de conception web, de contenu et de SEO.', 'user_id' => '2', 'starting_at' => '2024-02-14', 'ending_at' => '2026-04-03'],
+];
+$insert_project_in_projects_table_sql = 'INSERT INTO projects (name, description, user_id, starting_at, ending_at) VALUES (:name, :description, :user_id, :starting_at, :ending_at)';
+$insert_project_in_projects_table_stmt = $db->prepare($insert_project_in_projects_table_sql);
+foreach ($projects as $project) {
+    $insert_project_in_projects_table_stmt->bindValue('name', $project['name']);
+    $insert_project_in_projects_table_stmt->bindValue('description', $project['description']);
+    $insert_project_in_projects_table_stmt->bindValue('user_id', $project['user_id']);
+    $insert_project_in_projects_table_stmt->bindValue('starting_at', $project['starting_at']);
+    $insert_project_in_projects_table_stmt->bindValue('ending_at', $project['ending_at']);
+    $insert_project_in_projects_table_stmt->execute();
+}
+$count_projects = count($projects);
+echo "Projects table seeded with {$count_projects} projects".PHP_EOL;
+
+echo 'Seeding Projects_Contact table'.PHP_EOL;
+$projects_contacts = [
+  ['contact_id' => '1', 'project_id' => '1', 'role' => 'director'],
+  ['contact_id' => '3', 'project_id' => '1', 'role' => 'worker'],
+  ['contact_id' => '4', 'project_id' => '2', 'role' => 'director'],
+  ['contact_id' => '5', 'project_id' => '2', 'role' => 'worker'],
+  ['contact_id' => '7', 'project_id' => '3', 'role' => 'director'],
+  ['contact_id' => '1', 'project_id' => '3', 'role' => 'worker'],
+  ['contact_id' => '2', 'project_id' => '4', 'role' => 'director'],
+  ['contact_id' => '6', 'project_id' => '4', 'role' => 'worker'],
+  ['contact_id' => '8', 'project_id' => '4', 'role' => 'worker'],
+  ['contact_id' => '9', 'project_id' => '4', 'role' => 'worker'],
+];
+$insert_project_contact_in_projects_contacts_table_sql = 'INSERT INTO projects_contacts (contact_id, project_id, role) VALUES (:contact_id, :project_id, :role)';
+$insert_project_contact_in_projects_contacts_table_stmt = $db->prepare($insert_project_contact_in_projects_contacts_table_sql);
+foreach ($projects_contacts as $project_contact) {
+    $insert_project_contact_in_projects_contacts_table_stmt->bindValue('contact_id', $project_contact['contact_id']);
+    $insert_project_contact_in_projects_contacts_table_stmt->bindValue('project_id', $project_contact['project_id']);
+    $insert_project_contact_in_projects_contacts_table_stmt->bindValue('role', $project_contact['role']);
+    $insert_project_contact_in_projects_contacts_table_stmt->execute();
+}
+$count_projects_contacts = count($projects_contacts);
+echo "Projects_Contacts table seeded with {$count_projects_contacts} contacts_projects".PHP_EOL;
 

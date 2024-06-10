@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
 use App\Models\Contact;
+use App\Models\ProjectContact;
 use Core\Auth;
 use Core\Concerns\Request\HasIdentifier;
 use Core\Exceptions\FileNotFoundException;
@@ -14,13 +16,17 @@ use stdClass;
 class ContactController
 {
     private Contact $contact;
+    private Attendance $attendance;
+    private ProjectContact $project_contact;
 
     use HasIdentifier;
 
     public function __construct()
     {
         try {
-            $this->contact = new Contact(base_path('.env.local.ini'));
+            $this->contact = new Contact();
+            $this->attendance = new Attendance();
+            $this->project_contact = new ProjectContact();
         } catch (FileNotFoundException $exception) {
             exit($exception->getMessage());
         }
@@ -114,6 +120,10 @@ class ContactController
         $id = $this->checkValidId();
 
         $this->check_ownership($id);
+
+        $this->project_contact->deleteFromOthersTables($id, 'contact');
+
+        $this->attendance->deleteFromOthersTables($id, 'contact');
 
         $this->contact->delete($id);
 

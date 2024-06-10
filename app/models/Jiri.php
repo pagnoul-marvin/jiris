@@ -3,10 +3,20 @@
 namespace App\Models;
 
 use Core\Database;
+use PDO;
 
 class Jiri extends Database
 {
     protected string $table = 'jiris';
+
+    private PDO $connection;
+
+    public function __construct()
+    {
+        parent::__construct(base_path('.env.local.ini'));
+        $database = Database::getInstance();
+        $this->connection = $database->getConnection();
+    }
 
     public function upcomingBelongingTo(string|int $id, string $model_name): false|array
     {
@@ -16,7 +26,7 @@ class Jiri extends Database
                          WHERE $foreign_key = :id   
                                AND starting_at > current_timestamp
                 SQL;
-        $statement = $this->prepare($sql);
+        $statement = $this->connection->prepare($sql);
         $statement->bindValue(':id', $id);
         $statement->execute();
         return $statement->fetchAll();
@@ -30,7 +40,7 @@ class Jiri extends Database
                          WHERE $foreign_key = :id   
                                AND starting_at < current_timestamp
                 SQL;
-        $statement = $this->prepare($sql);
+        $statement = $this->connection->prepare($sql);
         $statement->bindValue(':id', $id);
         $statement->execute();
         return $statement->fetchAll();
@@ -57,7 +67,7 @@ class Jiri extends Database
             ORDER BY c.name;
         SQL;
 
-        $statement = $this->prepare($sql);
+        $statement = $this->connection->prepare($sql);
         $statement->bindValue(':id', $id);
         if ($role_constraints) {
             $statement->bindValue(':role', $role);
@@ -70,5 +80,4 @@ class Jiri extends Database
     {
         return $this->fetchContacts($id, 'evaluator');
     }
-
 }

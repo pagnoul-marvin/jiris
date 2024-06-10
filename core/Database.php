@@ -10,10 +10,12 @@ use stdClass;
 class Database extends PDO
 {
     protected string $table;
-
     private array $tables;
-
     private string $database_name;
+
+    private static ?Database $instance = null;
+
+    private ?PDO $connection = null;
 
     public function __construct(string $ini_path)
     {
@@ -46,9 +48,10 @@ class Database extends PDO
 
         try {
             parent::__construct($dsn, $username, $password, $options);
+            $this->connection = $this;
+
         } catch (PDOException $exception) {
-            // TODO Rediriger vers une page d'erreur générique qui invite à contacter l'admin
-            exit('Un problème de connection avec la base de données est apparu, contactez l’administrateur');
+            exit('Un problème de connexion avec la base de données est apparu, contactez l’administrateur');
         }
 
         $this->tables = $this->query('SHOW TABLES')->fetchAll();
@@ -57,6 +60,7 @@ class Database extends PDO
     public function dropTables(): void
     {
         foreach ($this->tables as $table) {
+            $this->exec("SET FOREIGN_KEY_CHECKS = 0;");
             $field_name = "Tables_in_{$this->database_name}";
             $this->exec("DROP TABLE IF EXISTS {$table->$field_name}");
         }
@@ -79,7 +83,8 @@ class Database extends PDO
                 SELECT * FROM $this->table 
                          WHERE id = :id  
         SQL;
-        $statement = $this->prepare($sql);
+
+        $statement = $this->connection->prepare($sql);
         $statement->execute(['id' => $id]);
 
         return $statement->fetch();
@@ -92,7 +97,7 @@ class Database extends PDO
                          WHERE id = :id  
         SQL;
 
-        return $this->prepare($sql)->execute(['id' => $id]);
+        return $this->connection->prepare($sql)->execute(['id' => $id]);
     }
 
     public function update(string $id, array $data): bool
@@ -106,7 +111,7 @@ class Database extends PDO
             SET $updateString
                 WHERE id = :id
         SQL;
-        $statement = $this->prepare($sql);
+        $statement = $this->connection->prepare($sql);
         $statement->bindValue('id', $id);
 
         foreach ($data as $k => $v) {
@@ -128,7 +133,7 @@ class Database extends PDO
             VALUES ($placeholders)
         SQL;
 
-        $statement = $this->prepare($sql);
+        $statement = $this->connection->prepare($sql);
 
         foreach ($data as $k => $v) {
             $statement->bindValue($k, $v);
@@ -144,9 +149,36 @@ class Database extends PDO
             SELECT * FROM $this->table
                      WHERE $foreign_key = :id
             SQL;
-        $statement = $this->prepare($sql);
+        $statement = $this->connection->prepare($sql);
         $statement->bindValue(':id', $id);
         $statement->execute();
         return $statement->fetchAll();
     }
+
+    public function deleteFormOthersTables(int|string $id, string $model_name): void
+    {
+        $foreign_key = "{$model_name}_id";
+        $sql = <<<SQL
+            DELETE from $this->table
+            WHERE $foreign_key = :id
+        SQL;
+
+        $statement = $this->connection->prepare($sql);
+        $statement->bindValue('id', $id);
+        $statement->execute();
+    }
+
+    public static function getInstance(): ?Database
+    {
+        if (self::$instance === null) {
+            self::$instance = new Database(base_path('.env.local.ini'));
+        }
+        return self::$instance;
+    }
+
+    public function getConnection(): ?PDO
+    {
+        return $this->connection;
+    }
+
 }
