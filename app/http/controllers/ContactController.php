@@ -121,9 +121,9 @@ class ContactController
 
         $this->check_ownership($id);
 
-        $this->project_contact->deleteFromOthersTables($id, 'contact');
+        $this->project_contact->deleteFormOthersTables($id, 'contact');
 
-        $this->attendance->deleteFromOthersTables($id, 'contact');
+        $this->attendance->deleteFormOthersTables($id, 'contact');
 
         $this->contact->delete($id);
 
