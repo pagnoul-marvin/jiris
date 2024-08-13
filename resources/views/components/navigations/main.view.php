@@ -13,6 +13,7 @@
                    href="/contacts">Contacts</a></li>
             <li><a class="underline text-white uppercase tracking-wider"
                    href="/projects">Projets</a></li>
+            <li><a class="underline text-white uppercase tracking-wider" href="/profile/edit">Votre profil</a></li>
             <li class="mt-4 sm:mt-auto sm:ml-auto">
                 <?php
                 component('forms.logout.delete') ?>

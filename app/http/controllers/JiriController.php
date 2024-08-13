@@ -23,7 +23,6 @@ class JiriController
     private ?Database $db;
 
     use HasIdentifier;
-
     public function __construct()
     {
         try {

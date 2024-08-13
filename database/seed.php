@@ -5,12 +5,13 @@ echo 'Seeding User table'.PHP_EOL;
 
 $password = password_hash('ch4nge_th1s', PASSWORD_DEFAULT);
 $users = [
-    ['email' => 'dominique.vilain@hepl.be', 'password' => $password],
-    ['email' => 'daniel.schreurs@hepl.be', 'password' => $password],
+    ['name'=>'dominique', 'email' => 'dominique.vilain@hepl.be', 'password' => $password],
+    ['name'=>'daniel', 'email' => 'daniel.schreurs@hepl.be', 'password' => $password],
 ];
-$insert_user_in_users_table_sql = 'INSERT INTO users (email, password) VALUES (:email, :password)';
+$insert_user_in_users_table_sql = 'INSERT INTO users (name, email, password) VALUES (:name, :email, :password)';
 $insert_user_in_users_table_stmt = $db->prepare($insert_user_in_users_table_sql);
 foreach ($users as $user) {
+    $insert_user_in_users_table_stmt->bindValue('name', $user['name']);
     $insert_user_in_users_table_stmt->bindValue('email', $user['email']);
     $insert_user_in_users_table_stmt->bindValue('password', $user['password']);
     $insert_user_in_users_table_stmt->execute();

@@ -196,4 +196,15 @@ class Validator
 
         return false;
     }
+
+    private static  function password_match(string $key): bool
+    {
+        if (!password_verify($_REQUEST[$key], Auth::user()->password)) {
+            $_SESSION['errors'][$key] = 'Le mot de passe fourni ne correspond pas à votre mot de passe actuel';
+
+            return false;
+        }
+
+        return true;
+    }
 }

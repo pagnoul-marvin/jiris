@@ -32,4 +32,9 @@ class Auth
     {
         return $_SESSION['user']->id;
     }
+
+    public static function user()
+    {
+        return $_SESSION['user'];
+    }
 }

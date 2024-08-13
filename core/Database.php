@@ -49,7 +49,6 @@ class Database extends PDO
         try {
             parent::__construct($dsn, $username, $password, $options);
             $this->connection = $this;
-
         } catch (PDOException $exception) {
             exit('Un problème de connexion avec la base de données est apparu, contactez l’administrateur');
         }
@@ -142,6 +141,18 @@ class Database extends PDO
         return $statement->execute();
     }
 
+    public function deleteFromOthersTables(mixed $id, string $model_name):void
+    {
+        $foreign_key = "{$model_name}_id";
+        $sql = <<<SQL
+        DELETE from $this->table
+        WHERE $foreign_key = :id
+        SQL;
+        $statement = $this->connection->prepare($sql);
+        $statement->bindValue(':id', $id);
+        $statement->execute();
+    }
+
     public function belongingTo(int $id, string $model_name): array
     {
         $foreign_key = "{$model_name}_id";
@@ -155,19 +166,6 @@ class Database extends PDO
         return $statement->fetchAll();
     }
 
-    public function deleteFormOthersTables(int|string $id, string $model_name): void
-    {
-        $foreign_key = "{$model_name}_id";
-        $sql = <<<SQL
-            DELETE from $this->table
-            WHERE $foreign_key = :id
-        SQL;
-
-        $statement = $this->connection->prepare($sql);
-        $statement->bindValue('id', $id);
-        $statement->execute();
-    }
-
     public static function getInstance(): ?Database
     {
         if (self::$instance === null) {
@@ -178,7 +176,6 @@ class Database extends PDO
 
     public function getConnection(): ?PDO
     {
-        return $this->connection;
+       return $this->connection;
     }
-
 }

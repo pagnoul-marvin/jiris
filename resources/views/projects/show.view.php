@@ -77,7 +77,6 @@ partials('common_html_start');
 
 <?php endif; ?>
 
-
 <form action="/project"
       method="post">
     <?php

@@ -1,7 +1,7 @@
 <?php
 /** @var array $passed_projects */
 /** @var array $upcoming_projects */
-/** @var array $in_progress_projects */
+/** @var array $current_projects */
 ?>
 
 <!doctype html>
@@ -58,10 +58,10 @@ partials('common_html_start');
 
     <h2 class="font-bold text-xl">Voici les projets en cours&nbsp;:</h2>
 
-    <?php if (!empty($in_progress_projects)): ?>
+    <?php if (!empty($current_projects)): ?>
 
         <?php component('projects.list', [
-            'projects' => $in_progress_projects,
+            'projects' => $current_projects,
         ]) ?>
 
     <?php else: ?>
